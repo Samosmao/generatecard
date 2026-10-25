@@ -230,7 +230,7 @@ input:focus, select:focus {
   display: grid;
   grid-template-columns: repeat(4, 140px);
   grid-template-rows: repeat(2, 200px);
-  gap: 2px;
+  gap: 0;
 
   align-content: center;
   justify-content: center;
@@ -301,13 +301,19 @@ input:focus, select:focus {
   justify-content: center;
 
   color: #000;
-  font-family: Moul, Battambang, serif;
-  font-size: 8px;
+  font-family: Battambang, serif;
+  font-size: 10px;
   font-weight: 400;
   line-height: 1;
   white-space: nowrap;
 
   background: transparent !important;
+}
+
+/* Only the word inside the parentheses uses Moul. */
+.card-type .type-word {
+  font-family: Moul, Battambang, serif;
+  font-weight: 400;
 }
 
 .empty-card {
@@ -359,9 +365,9 @@ input:focus, select:focus {
     grid-template-columns: repeat(4, 70mm);
     grid-template-rows: repeat(2, 100mm);
 
-    /* 1mm cutting gutters: 4 × 70mm cards still fit on A4. */
-    column-gap: 1mm;
-    row-gap: 1mm;
+    /* Adjacent cards with no added cutting gutter. */
+    column-gap: 0;
+    row-gap: 0;
 
     align-content: center;
     justify-content: center;
@@ -477,7 +483,7 @@ input:focus, select:focus {
       <div class="field">
         <label for="type">អត្ថបទខាងក្រោមកាត</label>
         <select id="type">
-          <option value="ពូជស្រូវ">ពូជស្រូវ</option>
+          <option value="ស្រូវ">ស្រូវ</option>
           <option value="ស្បៀង">ស្បៀង</option>
         </select>
       </div>
@@ -713,7 +719,14 @@ function createCard(n) {
 
   const type = document.createElement("span");
   type.className = "card-type";
-  type.textContent = "( " + $("type").value + " )";
+  const openParen = document.createElement("span");
+  openParen.textContent = "(";
+  const typeWord = document.createElement("span");
+  typeWord.className = "type-word";
+  typeWord.textContent = $("type").value;
+  const closeParen = document.createElement("span");
+  closeParen.textContent = ")";
+  type.append(openParen, typeWord, closeParen);
 
   card.append(image, numberRow, type);
   return card;
