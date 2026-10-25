@@ -2,802 +2,928 @@
 <!DOCTYPE html>
 <html lang="km">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rice Card Studio</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    :root {
-      color-scheme: dark;
-    }
-
-    body {
-      margin: 0;
-      background: #101916;
-      color: #edf4f0;
-      font-family: Inter, Battambang, sans-serif;
-    }
-
-    button, input, select {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    header {
-      padding: 20px 28px;
-      background: #15231d;
-      border-bottom: 1px solid #304538;
-    }
-
-    .brand {
-      font-size: 20px;
-      font-weight: 800;
-      color: #78dfa5;
-    }
-
-    main {
-      max-width: 1280px;
-      margin: auto;
-      padding: 36px 22px;
-    }
-
-    h1 {
-      font-size: clamp(28px, 4vw, 42px);
-      margin: 0 0 10px;
-    }
-
-    h1 span {
-      color: #5bdc9b;
-    }
-
-    .description {
-      color: #9db1a5;
-      line-height: 1.8;
-      margin-bottom: 28px;
-    }
-
-    .workspace {
-      display: grid;
-      grid-template-columns: 360px minmax(0, 1fr);
-      gap: 22px;
-      align-items: start;
-    }
-
-    .panel {
-      background: #192921;
-      border: 1px solid #304538;
-      padding: 24px;
-      border-radius: 18px;
-      min-width: 0;
-    }
-
-    h2 {
-      margin: 0 0 20px;
-      font-size: 18px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      color: #d0e3d6;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .field {
-      margin-bottom: 19px;
-    }
-
-    .field-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    input, select {
-      width: 100%;
-      min-width: 0;
-      background: #13221b;
-      color: #f2faf5;
-      border: 1px solid #3c5747;
-      border-radius: 10px;
-      padding: 12px;
-      outline: none;
-    }
-
-    input:focus, select:focus {
-      border-color: #6de1a0;
-    }
-
-    .hint {
-      font-size: 12px;
-      color: #91ac98;
-      line-height: 1.6;
-      margin-top: 7px;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin: 20px 0;
-    }
-
-    .stat {
-      background: #20372a;
-      border: 1px solid #345443;
-      border-radius: 12px;
-      padding: 16px;
-    }
-
-    .stat strong {
-      display: block;
-      font-size: 26px;
-    }
-
-    .stat span {
-      font-size: 12px;
-      color: #a2bca9;
-    }
-
-    .layout-info {
-      padding: 13px;
-      border: 1px solid #345443;
-      border-radius: 10px;
-      color: #a6e8c0;
-      font-size: 13px;
-    }
-
-    .btn {
-      width: 100%;
-      padding: 14px;
-      border-radius: 11px;
-      border: none;
-      font-weight: 700;
-      margin-top: 10px;
-    }
-
-    .btn-primary {
-      background: #14905d;
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: #0d7c4e;
-    }
-
-    .btn-secondary {
-      background: #203a2c;
-      color: #b1eac5;
-      border: 1px solid #3d6047;
-    }
-
-    .btn:disabled {
-      opacity: .55;
-      cursor: wait;
-    }
-
-    .error {
-      color: #ff9c8c;
-      font-size: 12px;
-      margin: 8px 0;
-      min-height: 18px;
-    }
-
-    .preview-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    .preview-header h2 {
-      margin: 0;
-    }
-
-    .badge {
-      color: #b8ddc5;
-      background: #233b2d;
-      padding: 7px 10px;
-      border-radius: 7px;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .preview-area {
-      padding: 20px 0;
-      background: #0e1813;
-      overflow: auto;
-      border-radius: 12px;
-    }
-
-    /*
-      A4 PREVIEW
-      Transparent — no white paper background.
-      Scale factor: 2px per mm.
-    */
-    .a4-preview {
-      width: 594px;
-      height: 420px;
-      display: grid;
-      grid-template-columns: repeat(4, 140px);
-      grid-template-rows: repeat(2, 200px);
-      gap: 8px;
-      align-content: center;
-      justify-content: center;
-      margin: auto;
-
-      background: transparent !important;
-      background-color: transparent !important;
-    }
-
-    /*
-      Card size: 7 × 10 cm.
-      The source PNG still contains its own white pixels.
-    */
-    .card {
-      position: relative;
-      width: 140px;
-      height: 200px;
-      background: transparent;
-      overflow: hidden;
-    }
-
-    .card img {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-
-    .card-number {
-      position: absolute;
-      top: 72%;
-      left: 46%;
-      font-family: Battambang, serif;
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: .035em;
-      line-height: 1;
-      color: black;
-      white-space: nowrap;
-    }
-
-    .card-type {
-      position: absolute;
-      left: 20%;
-      top: 82%;
-      width: 60%;
-      height: 11%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      /* Covers the original printed bottom label. */
-      background: white;
-      color: black;
-
-      font-family: Battambang, serif;
-      font-weight: 700;
-      font-size: 13px;
-      line-height: 1;
-      white-space: nowrap;
-    }
-
-    .empty-card {
-      width: 140px;
-      height: 200px;
-      border: 1px dashed #435b4a;
-    }
-
-    .preview-footer {
-      color: #9db1a5;
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 15px;
-      font-size: 12px;
-    }
-
-    .notice {
-      color: #9db1a5;
-      font-size: 12px;
-      line-height: 1.8;
-    }
-
-    #printRoot {
-      display: none;
-    }
-
-    /*
-      PRINT SETTINGS
-      A4 LANDSCAPE
-      Transparent page background
-      8 cards (4 columns × 2 rows)
-    */
-    @page {
-      size: A4 landscape;
-      margin: 0;
-    }
-
-    @media print {
-      html, body {
-        margin: 0 !important;
-        padding: 0 !important;
-        background: transparent !important;
-        background-color: transparent !important;
-      }
-
-      header, main {
-        display: none !important;
-      }
-
-      #printRoot {
-        display: block !important;
-        background: transparent !important;
-      }
-
-      .print-sheet {
-        width: 297mm;
-        height: 210mm;
-
-        display: grid;
-        grid-template-columns: repeat(4, 70mm);
-        grid-template-rows: repeat(2, 100mm);
-
-        column-gap: 4mm;
-        row-gap: 4mm;
-
-        align-content: center;
-        justify-content: center;
-
-        background: transparent !important;
-        background-color: transparent !important;
-
-        page-break-after: always;
-        break-after: page;
-      }
-
-      .print-sheet:last-child {
-        page-break-after: auto;
-        break-after: auto;
-      }
-
-      .print-sheet .card {
-        width: 70mm;
-        height: 100mm;
-        background: transparent !important;
-      }
-
-      .print-sheet .card-number {
-        top: 72%;
-        left: 46%;
-        font-size: 7mm;
-      }
-
-      .print-sheet .card-type {
-        font-size: 5mm;
-      }
-
-      .print-sheet .empty-card {
-        width: 70mm;
-        height: 100mm;
-        border: 0;
-      }
-    }
-
-    @media (max-width: 900px) {
-      .workspace {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 650px) {
-      main {
-        padding: 24px 14px;
-      }
-
-      .panel {
-        padding: 18px;
-      }
-
-      .preview-area {
-        overflow-x: auto;
-      }
-
-      .a4-preview {
-        margin-left: 12px;
-        margin-right: 12px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rice Card Studio</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: #101916;
+  color: #edf4f0;
+  font-family: Inter, Battambang, sans-serif;
+}
+
+button, input, select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+header {
+  background: #15231d;
+  border-bottom: 1px solid #304538;
+  padding: 18px 26px;
+}
+
+.brand {
+  font-size: 20px;
+  font-weight: 800;
+  color: #78dfa5;
+}
+
+main {
+  max-width: 1280px;
+  margin: auto;
+  padding: 35px 22px;
+}
+
+h1 {
+  font-size: clamp(28px, 4vw, 42px);
+  margin: 0 0 10px;
+}
+
+h1 span {
+  color: #5bdc9b;
+}
+
+.description {
+  color: #9db1a5;
+  line-height: 1.8;
+  margin-bottom: 28px;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+
+.panel {
+  min-width: 0;
+  padding: 24px;
+  background: #192921;
+  border: 1px solid #304538;
+  border-radius: 18px;
+}
+
+h2 {
+  margin: 0 0 20px;
+  font-size: 18px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #d0e3d6;
+}
+
+.field {
+  margin-bottom: 19px;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+input, select {
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  color: #f2faf5;
+  background: #13221b;
+  border: 1px solid #3c5747;
+  border-radius: 10px;
+  outline: none;
+}
+
+input:focus, select:focus {
+  border-color: #6de1a0;
+}
+
+.hint {
+  margin-top: 7px;
+  font-size: 12px;
+  color: #91ac98;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.stat {
+  padding: 16px;
+  background: #20372a;
+  border: 1px solid #345443;
+  border-radius: 12px;
+}
+
+.stat strong {
+  display: block;
+  font-size: 26px;
+}
+
+.stat span {
+  font-size: 12px;
+  color: #a2bca9;
+}
+
+.layout-info {
+  padding: 13px;
+  border: 1px solid #345443;
+  border-radius: 10px;
+  color: #a6e8c0;
+  font-size: 13px;
+}
+
+.btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 11px;
+  font-weight: 700;
+}
+
+.btn-primary {
+  background: #14905d;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #0d7c4e;
+}
+
+.btn-secondary {
+  background: #203a2c;
+  color: #b1eac5;
+  border: 1px solid #3d6047;
+}
+
+.btn:disabled {
+  opacity: .55;
+  cursor: wait;
+}
+
+.error {
+  min-height: 18px;
+  margin: 8px 0;
+  color: #ff9c8c;
+  font-size: 12px;
+}
+
+.notice {
+  color: #9db1a5;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.preview-header h2 {
+  margin: 0;
+}
+
+.badge {
+  padding: 7px 10px;
+  color: #b8ddc5;
+  background: #233b2d;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.preview-area {
+  padding: 20px 0;
+  background: #0e1813;
+  border-radius: 12px;
+  overflow: auto;
+}
+
+/* A4 Landscape Preview */
+.a4-preview {
+  width: 594px;
+  height: 420px;
+  display: grid;
+  grid-template-columns: repeat(4, 140px);
+  grid-template-rows: repeat(2, 200px);
+  gap: 8px;
+  align-content: center;
+  justify-content: center;
+  margin: auto;
+
+  background: transparent !important;
+}
+
+/* Individual card: 7 × 10 cm */
+.card {
+  position: relative;
+  width: 140px;
+  height: 200px;
+  overflow: hidden;
+  background: transparent !important;
+}
+
+.card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.card-number {
+  position: absolute;
+  top: 72%;
+  left: 46%;
+  z-index: 2;
+
+  color: #000;
+  font-family: Battambang, serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .035em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/*
+  Bottom label:
+  No white rectangle.
+  Original text is removed from the PNG
+  dynamically using Canvas.
+*/
+.card-type {
+  position: absolute;
+  top: 82%;
+  left: 20%;
+  width: 60%;
+  height: 11%;
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: transparent !important;
+  background-color: transparent !important;
+
+  color: #000;
+  font-family: Battambang, serif;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.empty-card {
+  width: 140px;
+  height: 200px;
+}
+
+.preview-footer {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 15px;
+  color: #9db1a5;
+  font-size: 12px;
+}
+
+#printRoot {
+  display: none;
+}
+
+/* A4 Print Settings */
+@page {
+  size: A4 landscape;
+  margin: 0;
+}
+
+@media print {
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
+  header, main {
+    display: none !important;
+  }
+
+  #printRoot {
+    display: block !important;
+    background: transparent !important;
+  }
+
+  .print-sheet {
+    width: 297mm;
+    height: 210mm;
+
+    display: grid;
+    grid-template-columns: repeat(4, 70mm);
+    grid-template-rows: repeat(2, 100mm);
+    column-gap: 4mm;
+    row-gap: 4mm;
+
+    align-content: center;
+    justify-content: center;
+
+    background: transparent !important;
+
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .print-sheet:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+
+  .print-sheet .card {
+    width: 70mm;
+    height: 100mm;
+    background: transparent !important;
+  }
+
+  .print-sheet .card-number {
+    top: 72%;
+    left: 46%;
+    font-size: 7mm;
+  }
+
+  .print-sheet .card-type {
+    font-size: 5mm;
+    background: transparent !important;
+  }
+
+  .print-sheet .empty-card {
+    width: 70mm;
+    height: 100mm;
+  }
+}
+
+@media (max-width: 900px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 650px) {
+  main {
+    padding: 24px 14px;
+  }
+
+  .panel {
+    padding: 18px;
+  }
+
+  .a4-preview {
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+}
+</style>
 </head>
 
 <body>
-  <header>
-    <div class="brand">🌾 Rice Card Studio</div>
-  </header>
 
-  <main>
-    <h1>បង្កើតកាតពូជស្រូវ <span>តាមលេខរៀង</span></h1>
+<header>
+  <div class="brand">🌾 Rice Card Studio</div>
+</header>
 
-    <p class="description">
-      បង្កើតកាត 7 × 10 សម. ជាមួយលេខរៀងស្វ័យប្រវត្តិ។
-      A4 Landscape មាន 8 កាតក្នុងមួយសន្លឹក។
-      ផ្ទៃ A4 មិនកំណត់ពណ៌ Background។
-    </p>
+<main>
+  <h1>
+    បង្កើតកាតពូជស្រូវ <span>តាមលេខរៀង</span>
+  </h1>
 
-    <div class="workspace">
+  <p class="description">
+    បង្កើតកាតទំហំ 7 × 10 សម. ជាមួយលេខរៀងស្វ័យប្រវត្តិ។
+    ក្រដាស A4 Landscape មាន 8 កាតក្នុងមួយសន្លឹក។
+    គ្មាន Background ពណ៌សក្នុងរូបកាត។
+  </p>
 
-      <!-- SETTINGS -->
-      <section class="panel">
-        <h2>ការកំណត់កាត</h2>
+  <div class="workspace">
 
-        <div class="field-row">
-          <div class="field">
-            <label for="start">លេខចាប់ផ្ដើម</label>
-            <input id="start" type="number" value="1" min="0">
-          </div>
+    <section class="panel">
+      <h2>ការកំណត់កាត</h2>
 
-          <div class="field">
-            <label for="end">លេខបញ្ចប់</label>
-            <input id="end" type="number" value="6000" min="0">
-          </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="start">លេខចាប់ផ្ដើម</label>
+          <input id="start" type="number" value="1" min="0">
         </div>
 
         <div class="field">
-          <label for="digits">ចំនួនខ្ទង់លេខ</label>
-          <select id="digits">
-            <option value="4">4 Digits — 0001</option>
-            <option value="5" selected>5 Digits — 00001</option>
-            <option value="6">6 Digits — 000001</option>
-          </select>
+          <label for="end">លេខបញ្ចប់</label>
+          <input id="end" type="number" value="6000" min="0">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="digits">ចំនួនខ្ទង់លេខ</label>
+        <select id="digits">
+          <option value="4">4 Digits — 0001</option>
+          <option value="5" selected>5 Digits — 00001</option>
+          <option value="6">6 Digits — 000001</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="type">អត្ថបទខាងក្រោមកាត</label>
+        <select id="type">
+          <option value="ពូជស្រូវ">ពូជស្រូវ</option>
+          <option value="ស្បៀង">ស្បៀង</option>
+        </select>
+      </div>
+
+      <div class="layout-info">
+        A4 Landscape · 8 កាត · 4 × 2 · 7 × 10 cm
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <strong id="total">6,000</strong>
+          <span>កាតសរុប</span>
         </div>
 
-        <div class="field">
-          <label for="type">អត្ថបទខាងក្រោមកាត</label>
-          <select id="type">
-            <option value="ពូជស្រូវ">ពូជស្រូវ</option>
-            <option value="ស្បៀង">ស្បៀង</option>
-          </select>
+        <div class="stat">
+          <strong id="pages">750</strong>
+          <span>សន្លឹក A4</span>
         </div>
+      </div>
 
-        <div class="layout-info">
-          A4 Landscape · 8 កាត · 4 × 2 · 7 × 10 cm
-        </div>
+      <h2>បោះពុម្ពជាដុំៗ</h2>
 
-        <div class="stats">
-          <div class="stat">
-            <strong id="total">6,000</strong>
-            <span>កាតសរុប</span>
-          </div>
+      <div class="field">
+        <label for="batch">ចំនួន A4 ក្នុងមួយដង</label>
+        <select id="batch">
+          <option value="25">25 A4 — 200 កាត</option>
+          <option value="50" selected>50 A4 — 400 កាត</option>
+          <option value="100">100 A4 — 800 កាត</option>
+          <option value="250">250 A4 — 2,000 កាត</option>
+          <option value="all">ទាំងអស់</option>
+        </select>
+      </div>
 
-          <div class="stat">
-            <strong id="pages">750</strong>
-            <span>សន្លឹក A4</span>
-          </div>
-        </div>
+      <div class="field">
+        <label for="batchStart">ចាប់ផ្ដើមបោះពុម្ពពីលេខ</label>
+        <input id="batchStart" type="number" value="1" min="0">
+      </div>
 
-        <h2>បោះពុម្ពជាដុំៗ</h2>
+      <div id="error" class="error" role="alert"></div>
 
-        <div class="field">
-          <label for="batch">ចំនួន A4 ក្នុងមួយដង</label>
-          <select id="batch">
-            <option value="25">25 A4 — 200 កាត</option>
-            <option value="50" selected>50 A4 — 400 កាត</option>
-            <option value="100">100 A4 — 800 កាត</option>
-            <option value="250">250 A4 — 2,000 កាត</option>
-            <option value="all">ទាំងអស់</option>
-          </select>
-        </div>
+      <button class="btn btn-primary" id="printBtn">
+        🖨️ Print / Save PDF
+      </button>
 
-        <div class="field">
-          <label for="batchStart">ចាប់ផ្ដើមបោះពុម្ពពីលេខ</label>
-          <input id="batchStart" type="number" value="1" min="0">
-        </div>
+      <button class="btn btn-secondary" id="nextBtn">
+        ទៅកាន់ដុំបន្ទាប់ →
+      </button>
 
-        <div id="error" class="error" role="alert"></div>
+      <button class="btn btn-secondary" id="resetBtn">
+        Reset
+      </button>
 
-        <button class="btn btn-primary" id="printBtn">
-          🖨️ Print / Save PDF
-        </button>
+      <p id="batchInfo" class="notice"></p>
 
-        <button class="btn btn-secondary" id="nextBtn">
-          ទៅកាន់ដុំបន្ទាប់ →
-        </button>
+      <p class="notice">
+        Print Settings: A4 Landscape · Scale 100% ·
+        Margins None · បិទ Headers and Footers។
+      </p>
+    </section>
 
-        <button class="btn btn-secondary" id="resetBtn">
-          Reset
-        </button>
+    <section class="panel">
+      <div class="preview-header">
+        <h2>ទម្រង់មុនបោះពុម្ព</h2>
+        <span class="badge">A4 Landscape</span>
+      </div>
 
-        <p id="batchInfo" class="notice"></p>
+      <div class="preview-area">
+        <div class="a4-preview" id="previewSheet"></div>
+      </div>
 
-        <p class="notice">
-          Print Settings:
-          A4 Landscape · Scale 100% · Margins None ·
-          បិទ Headers and Footers។
-        </p>
-      </section>
+      <div class="preview-footer">
+        <span>7 × 10 cm</span>
+        <span>8 Cards / A4</span>
+        <span>Transparent Background</span>
+      </div>
+    </section>
 
-      <!-- PREVIEW -->
-      <section class="panel">
-        <div class="preview-header">
-          <h2>ទម្រង់មុនបោះពុម្ព</h2>
-          <span class="badge">A4 Landscape</span>
-        </div>
+  </div>
+</main>
 
-        <div class="preview-area">
-          <div class="a4-preview" id="previewSheet"></div>
-        </div>
+<div id="printRoot" aria-hidden="true"></div>
 
-        <div class="preview-footer">
-          <span>ទំហំកាត៖ 7 × 10 cm</span>
-          <span>8 កាតក្នុង A4</span>
-          <span>No A4 Background</span>
-        </div>
-      </section>
-    </div>
-  </main>
+<script>
+const $ = (id) => document.getElementById(id);
 
-  <!-- PRINT AREA -->
-  <div id="printRoot" aria-hidden="true"></div>
+const fields = [
+  "start",
+  "end",
+  "digits",
+  "type",
+  "batch",
+  "batchStart"
+];
 
-  <script>
-    const $ = (id) => document.getElementById(id);
+const CARDS_PER_PAGE = 8;
 
-    const fields = [
-      "start",
-      "end",
-      "digits",
-      "type",
-      "batch",
-      "batchStart"
-    ];
+let transparentCardUrl = "";
+let imageError = "";
 
-    function formatNumber(n) {
-      return String(n).padStart(
-        Number($("digits").value),
-        "0"
-      );
-    }
+function formatNumber(n) {
+  return String(n).padStart(
+    Number($("digits").value),
+    "0"
+  );
+}
 
-    function createCard(n) {
-      const card = document.createElement("div");
-      card.className = "card";
+/*
+  STEP 1: Prepare transparent PNG.
 
-      const img = document.createElement("img");
-      img.src = "assets/rice-card.png";
-      img.alt = "";
+  - Remove white pixels.
+  - Preserve black text and floral border.
+  - Remove the original bottom label.
+  - The selected label is drawn separately.
+*/
+const cardImageReady = new Promise((resolve) => {
+  const image = new Image();
 
-      const number = document.createElement("span");
-      number.className = "card-number";
-      number.textContent = formatNumber(n);
+  image.onload = () => {
+    try {
+      const canvas = document.createElement("canvas");
 
-      const type = document.createElement("span");
-      type.className = "card-type";
-      type.textContent = "( " + $("type").value + " )";
+      canvas.width = image.naturalWidth;
+      canvas.height = image.naturalHeight;
 
-      card.append(img, number, type);
-      return card;
-    }
+      const ctx = canvas.getContext("2d", {
+        willReadFrequently: true
+      });
 
-    function createEmptyCard() {
-      const empty = document.createElement("div");
-      empty.className = "empty-card";
-      return empty;
-    }
-
-    function getState() {
-      const start = Number($("start").value);
-      const end = Number($("end").value);
-      const batchStart = Number($("batchStart").value);
-
-      if (
-        !Number.isSafeInteger(start) ||
-        !Number.isSafeInteger(end) ||
-        start < 0 ||
-        end < start ||
-        end > 999999
-      ) {
-        return {
-          error: "សូមបញ្ចូលលេខឱ្យបានត្រឹមត្រូវ។"
-        };
+      if (!ctx) {
+        throw new Error("Canvas unavailable");
       }
 
-      const total = end - start + 1;
-      const pages = Math.ceil(total / 8);
+      ctx.drawImage(image, 0, 0);
 
-      const batch = $("batch").value;
-
-      const limit = batch === "all"
-        ? total
-        : Number(batch) * 8;
-
-      const valid = Math.max(
-        start,
-        Math.min(end, batchStart)
+      const pixels = ctx.getImageData(
+        0,
+        0,
+        canvas.width,
+        canvas.height
       );
 
-      const stop = Math.min(
-        end,
-        valid + limit - 1
-      );
+      const data = pixels.data;
+      const width = canvas.width;
+      const height = canvas.height;
 
-      return {
-        start,
-        end,
-        batchStart,
-        valid,
-        stop,
-        total,
-        pages
-      };
-    }
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const i = (y * width + x) * 4;
 
-    function updatePreview() {
-      const s = getState();
+          /*
+            Remove the original "( ពូជស្រូវ )"
+            without touching the corner ornaments.
+          */
+          const originalBottomLabel =
+            x > width * 0.24 &&
+            x < width * 0.76 &&
+            y > height * 0.82 &&
+            y < height * 0.93;
 
-      $("error").textContent = s.error || "";
-
-      if (s.error) return;
-
-      $("total").textContent =
-        s.total.toLocaleString("en-US");
-
-      $("pages").textContent =
-        s.pages.toLocaleString("en-US");
-
-      const preview = $("previewSheet");
-      preview.replaceChildren();
-
-      for (let i = 0; i < 8; i++) {
-        const n = s.start + i;
-
-        preview.append(
-          n <= s.end
-            ? createCard(n)
-            : createEmptyCard()
-        );
-      }
-
-      const count = s.stop - s.valid + 1;
-      const sheets = Math.ceil(count / 8);
-
-      $("batchInfo").textContent =
-        "លេខ " +
-        formatNumber(s.valid) +
-        " – " +
-        formatNumber(s.stop) +
-        " (" + sheets + " សន្លឹក A4)";
-    }
-
-    fields.forEach((id) => {
-      $(id).addEventListener("input", updatePreview);
-      $(id).addEventListener("change", updatePreview);
-    });
-
-    $("start").addEventListener("change", () => {
-      $("batchStart").value = $("start").value;
-      updatePreview();
-    });
-
-    $("resetBtn").addEventListener("click", () => {
-      $("batchStart").value = $("start").value;
-      updatePreview();
-    });
-
-    $("nextBtn").addEventListener("click", () => {
-      const s = getState();
-      if (s.error) return;
-
-      $("batchStart").value =
-        s.stop >= s.end
-          ? s.start
-          : s.stop + 1;
-
-      updatePreview();
-    });
-
-    let printing = false;
-
-    $("printBtn").addEventListener("click", () => {
-      const s = getState();
-
-      if (s.error) {
-        updatePreview();
-        return;
-      }
-
-      if (
-        !Number.isSafeInteger(s.batchStart) ||
-        s.batchStart < s.start ||
-        s.batchStart > s.end
-      ) {
-        $("error").textContent =
-          "លេខចាប់ផ្ដើមបោះពុម្ពមិនត្រឹមត្រូវ។";
-        return;
-      }
-
-      if (printing) return;
-      printing = true;
-
-      const btn = $("printBtn");
-      btn.disabled = true;
-      btn.textContent = "កំពុងរៀបចំទំព័រ...";
-
-      const root = $("printRoot");
-      root.replaceChildren();
-
-      let n = s.valid;
-
-      function generateChunk() {
-        const fragment = document.createDocumentFragment();
-        let generatedPages = 0;
-
-        while (
-          n <= s.stop &&
-          generatedPages < 30
-        ) {
-          const sheet = document.createElement("div");
-          sheet.className = "print-sheet";
-
-          for (let i = 0; i < 8; i++) {
-            if (n <= s.stop) {
-              sheet.append(createCard(n));
-              n++;
-            } else {
-              sheet.append(createEmptyCard());
-            }
+          if (originalBottomLabel) {
+            data[i + 3] = 0;
+            continue;
           }
 
-          fragment.append(sheet);
-          generatedPages++;
+          /*
+            White -> alpha 0
+            Black -> alpha 255
+
+            Intermediate grays become partially
+            transparent to preserve smooth edges.
+          */
+          const brightness = (
+            data[i] +
+            data[i + 1] +
+            data[i + 2]
+          ) / 3;
+
+          const originalAlpha = data[i + 3];
+
+          data[i] = 0;
+          data[i + 1] = 0;
+          data[i + 2] = 0;
+
+          data[i + 3] = Math.round(
+            originalAlpha *
+            (255 - brightness) / 255
+          );
         }
-
-        root.append(fragment);
-
-        if (n <= s.stop) {
-          setTimeout(generateChunk, 0);
-          return;
-        }
-
-        const images = Array.from(
-          root.querySelectorAll("img")
-        );
-
-        Promise.all(
-          images.map((img) =>
-            img.decode().catch(() => {})
-          )
-        ).then(() => {
-          btn.disabled = false;
-          btn.textContent = "🖨️ Print / Save PDF";
-          printing = false;
-
-          window.print();
-        });
       }
 
-      generateChunk();
-    });
+      ctx.putImageData(pixels, 0, 0);
 
-    window.addEventListener("afterprint", () => {
-      $("printRoot").replaceChildren();
-    });
+      transparentCardUrl = canvas.toDataURL("image/png");
+    } catch (err) {
+      imageError = "មិនអាចបម្លែងរូបភាពទៅជា Transparent បាន។";
+      console.error(err);
+    }
 
+    resolve();
+  };
+
+  image.onerror = () => {
+    imageError = "រកមិនឃើញ assets/rice-card.png";
+    resolve();
+  };
+
+  image.src = "assets/rice-card.png";
+});
+
+/* STEP 2: Create one card */
+function createCard(n) {
+  const card = document.createElement("div");
+  card.className = "card";
+
+  const image = document.createElement("img");
+  image.src = transparentCardUrl;
+  image.alt = "";
+
+  const number = document.createElement("span");
+  number.className = "card-number";
+  number.textContent = formatNumber(n);
+
+  const type = document.createElement("span");
+  type.className = "card-type";
+  type.textContent = "( " + $("type").value + " )";
+
+  card.append(image, number, type);
+  return card;
+}
+
+function createEmptyCard() {
+  const empty = document.createElement("div");
+  empty.className = "empty-card";
+  return empty;
+}
+
+/* STEP 3: Validate numbering */
+function getState() {
+  const start = Number($("start").value);
+  const end = Number($("end").value);
+  const batchStart = Number($("batchStart").value);
+
+  if (
+    $("start").value.trim() === "" ||
+    $("end").value.trim() === "" ||
+    !Number.isSafeInteger(start) ||
+    !Number.isSafeInteger(end) ||
+    start < 0 ||
+    end < start ||
+    end > 999999
+  ) {
+    return {
+      error: "សូមបញ្ចូលលេខឱ្យបានត្រឹមត្រូវ។"
+    };
+  }
+
+  const total = end - start + 1;
+  const pages = Math.ceil(total / CARDS_PER_PAGE);
+
+  const batch = $("batch").value;
+
+  const limit = batch === "all"
+    ? total
+    : Number(batch) * CARDS_PER_PAGE;
+
+  const valid = Math.max(
+    start,
+    Math.min(end, batchStart)
+  );
+
+  const stop = Math.min(
+    end,
+    valid + limit - 1
+  );
+
+  return {
+    start,
+    end,
+    batchStart,
+    valid,
+    stop,
+    total,
+    pages
+  };
+}
+
+/* STEP 4: Preview */
+function updatePreview() {
+  const s = getState();
+
+  $("error").textContent = imageError || s.error || "";
+
+  if (s.error || imageError || !transparentCardUrl) {
+    return;
+  }
+
+  $("total").textContent =
+    s.total.toLocaleString("en-US");
+
+  $("pages").textContent =
+    s.pages.toLocaleString("en-US");
+
+  const preview = $("previewSheet");
+  preview.replaceChildren();
+
+  for (let i = 0; i < CARDS_PER_PAGE; i++) {
+    const n = s.start + i;
+
+    preview.append(
+      n <= s.end
+        ? createCard(n)
+        : createEmptyCard()
+    );
+  }
+
+  const count = s.stop - s.valid + 1;
+  const sheets = Math.ceil(
+    count / CARDS_PER_PAGE
+  );
+
+  $("batchInfo").textContent =
+    "លេខ " +
+    formatNumber(s.valid) +
+    " – " +
+    formatNumber(s.stop) +
+    " (" + sheets + " សន្លឹក A4)";
+}
+
+fields.forEach((id) => {
+  $(id).addEventListener("input", updatePreview);
+  $(id).addEventListener("change", updatePreview);
+});
+
+$("start").addEventListener("change", () => {
+  $("batchStart").value = $("start").value;
+  updatePreview();
+});
+
+$("resetBtn").addEventListener("click", () => {
+  $("batchStart").value = $("start").value;
+  updatePreview();
+});
+
+$("nextBtn").addEventListener("click", () => {
+  const s = getState();
+
+  if (s.error) return;
+
+  $("batchStart").value =
+    s.stop >= s.end
+      ? s.start
+      : s.stop + 1;
+
+  updatePreview();
+});
+
+/* STEP 5: Print / Save PDF */
+let printing = false;
+
+$("printBtn").addEventListener("click", async () => {
+  await cardImageReady;
+
+  if (imageError || !transparentCardUrl) {
+    $("error").textContent =
+      imageError || "មិនអាចរៀបចំរូបភាពបាន។";
+    return;
+  }
+
+  const s = getState();
+
+  if (s.error) {
     updatePreview();
-  </script>
+    return;
+  }
+
+  if (
+    $("batchStart").value.trim() === "" ||
+    !Number.isSafeInteger(s.batchStart) ||
+    s.batchStart < s.start ||
+    s.batchStart > s.end
+  ) {
+    $("error").textContent =
+      "លេខចាប់ផ្ដើមបោះពុម្ពមិនត្រឹមត្រូវ។";
+    return;
+  }
+
+  if (printing) return;
+  printing = true;
+
+  const button = $("printBtn");
+  button.disabled = true;
+  button.textContent = "កំពុងរៀបចំទំព័រ...";
+
+  const root = $("printRoot");
+  root.replaceChildren();
+
+  let n = s.valid;
+
+  function generateChunk() {
+    const fragment = document.createDocumentFragment();
+    let generatedPages = 0;
+
+    /*
+      Generate 30 A4 pages per chunk
+      to keep the interface responsive.
+    */
+    while (
+      n <= s.stop &&
+      generatedPages < 30
+    ) {
+      const sheet = document.createElement("div");
+      sheet.className = "print-sheet";
+
+      for (let i = 0; i < CARDS_PER_PAGE; i++) {
+        if (n <= s.stop) {
+          sheet.append(createCard(n));
+          n++;
+        } else {
+          sheet.append(createEmptyCard());
+        }
+      }
+
+      fragment.append(sheet);
+      generatedPages++;
+    }
+
+    root.append(fragment);
+
+    if (n <= s.stop) {
+      setTimeout(generateChunk, 0);
+      return;
+    }
+
+    // Wait for image and font rendering.
+    const images = Array.from(
+      root.querySelectorAll("img")
+    );
+
+    Promise.all([
+      ...images.slice(0, 8).map(img =>
+        img.decode().catch(() => {})
+      ),
+      document.fonts.ready
+    ]).then(() => {
+      button.disabled = false;
+      button.textContent = "🖨️ Print / Save PDF";
+      printing = false;
+
+      window.print();
+    });
+  }
+
+  generateChunk();
+});
+
+window.addEventListener("afterprint", () => {
+  $("printRoot").replaceChildren();
+});
+
+/* Start only when the transparent image is ready. */
+cardImageReady.then(() => {
+  updatePreview();
+});
+</script>
+
 </body>
 </html>
