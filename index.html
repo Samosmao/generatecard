@@ -8,7 +8,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Inter:wght@400;500;600;700;800&family=Moul&display=swap" rel="stylesheet">
 
 <style>
 * {
@@ -230,7 +230,7 @@ input:focus, select:focus {
   display: grid;
   grid-template-columns: repeat(4, 140px);
   grid-template-rows: repeat(2, 200px);
-  gap: 8px;
+  gap: 2px;
 
   align-content: center;
   justify-content: center;
@@ -301,9 +301,9 @@ input:focus, select:focus {
   justify-content: center;
 
   color: #000;
-  font-family: Battambang, serif;
-  font-size: 13px;
-  font-weight: 700;
+  font-family: Moul, Battambang, serif;
+  font-size: 12px;
+  font-weight: 400;
   line-height: 1;
   white-space: nowrap;
 
@@ -359,8 +359,9 @@ input:focus, select:focus {
     grid-template-columns: repeat(4, 70mm);
     grid-template-rows: repeat(2, 100mm);
 
-    column-gap: 4mm;
-    row-gap: 4mm;
+    /* 1mm cutting gutters: 4 × 70mm cards still fit on A4. */
+    column-gap: 1mm;
+    row-gap: 1mm;
 
     align-content: center;
     justify-content: center;
@@ -397,7 +398,7 @@ input:focus, select:focus {
   }
 
   .print-sheet .card-type {
-    font-size: 5mm;
+    font-size: 4.5mm;
     background: transparent !important;
   }
 
