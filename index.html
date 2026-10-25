@@ -41,9 +41,9 @@ header {
 }
 
 .brand {
+  color: #78dfa5;
   font-size: 20px;
   font-weight: 800;
-  color: #78dfa5;
 }
 
 main {
@@ -53,8 +53,8 @@ main {
 }
 
 h1 {
-  font-size: clamp(28px, 4vw, 42px);
   margin: 0 0 10px;
+  font-size: clamp(28px, 4vw, 42px);
 }
 
 h1 span {
@@ -62,9 +62,9 @@ h1 span {
 }
 
 .description {
+  margin-bottom: 28px;
   color: #9db1a5;
   line-height: 1.8;
-  margin-bottom: 28px;
 }
 
 .workspace {
@@ -90,9 +90,9 @@ h2 {
 label {
   display: block;
   margin-bottom: 8px;
+  color: #d0e3d6;
   font-size: 13px;
   font-weight: 700;
-  color: #d0e3d6;
 }
 
 .field {
@@ -109,8 +109,8 @@ input, select {
   width: 100%;
   min-width: 0;
   padding: 12px;
-  color: #f2faf5;
   background: #13221b;
+  color: #f2faf5;
   border: 1px solid #3c5747;
   border-radius: 10px;
   outline: none;
@@ -118,12 +118,6 @@ input, select {
 
 input:focus, select:focus {
   border-color: #6de1a0;
-}
-
-.hint {
-  margin-top: 7px;
-  font-size: 12px;
-  color: #91ac98;
 }
 
 .stats {
@@ -146,22 +140,22 @@ input:focus, select:focus {
 }
 
 .stat span {
-  font-size: 12px;
   color: #a2bca9;
+  font-size: 12px;
 }
 
 .layout-info {
   padding: 13px;
+  color: #a6e8c0;
   border: 1px solid #345443;
   border-radius: 10px;
-  color: #a6e8c0;
   font-size: 13px;
 }
 
 .btn {
   width: 100%;
-  padding: 14px;
   margin-top: 10px;
+  padding: 14px;
   border: none;
   border-radius: 11px;
   font-weight: 700;
@@ -232,18 +226,20 @@ input:focus, select:focus {
 .a4-preview {
   width: 594px;
   height: 420px;
+
   display: grid;
   grid-template-columns: repeat(4, 140px);
   grid-template-rows: repeat(2, 200px);
   gap: 8px;
+
   align-content: center;
   justify-content: center;
-  margin: auto;
 
+  margin: auto;
   background: transparent !important;
 }
 
-/* Individual card: 7 × 10 cm */
+/* Card: 7 × 10 cm */
 .card {
   position: relative;
   width: 140px;
@@ -258,41 +254,55 @@ input:focus, select:focus {
   height: 100%;
 }
 
+/*
+  NUMBER ROW
+  "លេខ៖" and "00001" are generated together.
+  Both use the same font and vertical alignment.
+*/
 .card-number {
   position: absolute;
-  top: 71%;
-  left: 46%;
-  z-index: 2;
 
-  color: #000;
-  font-family: Battambang, serif;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: .035em;
-  line-height: 1;
-  white-space: nowrap;
-}
+  top: 70%;
+  left: 0;
+  width: 100%;
+  height: 10%;
 
-/*
-  Bottom label:
-  No white rectangle.
-  Original text is removed from the PNG
-  dynamically using Canvas.
-*/
-.card-type {
-  position: absolute;
-  top: 82%;
-  left: 20%;
-  width: 60%;
-  height: 11%;
   z-index: 2;
 
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 12px;
+
+  color: #000;
+  font-family: Battambang, serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
 
   background: transparent !important;
-  background-color: transparent !important;
+}
+
+.card-number span {
+  display: inline-block;
+  line-height: 1;
+}
+
+/* Bottom type */
+.card-type {
+  position: absolute;
+
+  top: 82%;
+  left: 20%;
+  width: 60%;
+  height: 11%;
+
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   color: #000;
   font-family: Battambang, serif;
@@ -300,6 +310,8 @@ input:focus, select:focus {
   font-weight: 700;
   line-height: 1;
   white-space: nowrap;
+
+  background: transparent !important;
 }
 
 .empty-card {
@@ -321,7 +333,7 @@ input:focus, select:focus {
   display: none;
 }
 
-/* A4 Print Settings */
+/* A4 Printing */
 @page {
   size: A4 landscape;
   margin: 0;
@@ -350,6 +362,7 @@ input:focus, select:focus {
     display: grid;
     grid-template-columns: repeat(4, 70mm);
     grid-template-rows: repeat(2, 100mm);
+
     column-gap: 4mm;
     row-gap: 4mm;
 
@@ -374,8 +387,16 @@ input:focus, select:focus {
   }
 
   .print-sheet .card-number {
-    top: 72%;
-    left: 46%;
+    top: 70%;
+    left: 0;
+    width: 100%;
+    height: 10%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 6mm;
     font-size: 7mm;
   }
 
@@ -425,9 +446,9 @@ input:focus, select:focus {
   </h1>
 
   <p class="description">
-    បង្កើតកាតទំហំ 7 × 10 សម. ជាមួយលេខរៀងស្វ័យប្រវត្តិ។
+    បង្កើតកាត 7 × 10 សម. ជាមួយលេខរៀងស្វ័យប្រវត្តិ។
     ក្រដាស A4 Landscape មាន 8 កាតក្នុងមួយសន្លឹក។
-    គ្មាន Background ពណ៌សក្នុងរូបកាត។
+    អក្សរ «លេខ៖» និងលេខរៀងត្រូវបានតម្រឹមស្មើគ្នា។
   </p>
 
   <div class="workspace">
@@ -558,7 +579,9 @@ const CARDS_PER_PAGE = 8;
 
 let transparentCardUrl = "";
 let imageError = "";
+let printing = false;
 
+/* Number formatter */
 function formatNumber(n) {
   return String(n).padStart(
     Number($("digits").value),
@@ -567,12 +590,12 @@ function formatNumber(n) {
 }
 
 /*
-  STEP 1: Prepare transparent PNG.
+  Prepare the sample image.
 
-  - Remove white pixels.
-  - Preserve black text and floral border.
-  - Remove the original bottom label.
-  - The selected label is drawn separately.
+  1. Remove the white background.
+  2. Remove the original "លេខ៖" line.
+  3. Remove the original "( ពូជស្រូវ )".
+  4. Preserve the remaining black artwork.
 */
 const cardImageReady = new Promise((resolve) => {
   const image = new Image();
@@ -609,28 +632,26 @@ const cardImageReady = new Promise((resolve) => {
         for (let x = 0; x < width; x++) {
           const i = (y * width + x) * 4;
 
-          /*
-            Remove the original "( ពូជស្រូវ )"
-            without touching the corner ornaments.
-          */
-          const originalBottomLabel =
+          // Remove original bottom type.
+          const oldBottomLabel =
             x > width * 0.24 &&
             x < width * 0.76 &&
             y > height * 0.82 &&
             y < height * 0.93;
 
-          if (originalBottomLabel) {
+          // Remove original "លេខ៖" text.
+          const oldNumberLine =
+            x > width * 0.18 &&
+            x < width * 0.85 &&
+            y > height * 0.70 &&
+            y < height * 0.80;
+
+          if (oldBottomLabel || oldNumberLine) {
             data[i + 3] = 0;
             continue;
           }
 
-          /*
-            White -> alpha 0
-            Black -> alpha 255
-
-            Intermediate grays become partially
-            transparent to preserve smooth edges.
-          */
+          // Convert white to transparency.
           const brightness = (
             data[i] +
             data[i + 1] +
@@ -653,9 +674,9 @@ const cardImageReady = new Promise((resolve) => {
       ctx.putImageData(pixels, 0, 0);
 
       transparentCardUrl = canvas.toDataURL("image/png");
-    } catch (err) {
-      imageError = "មិនអាចបម្លែងរូបភាពទៅជា Transparent បាន។";
-      console.error(err);
+    } catch (error) {
+      imageError = "មិនអាចបម្លែងរូបភាពបាន។";
+      console.error(error);
     }
 
     resolve();
@@ -669,7 +690,7 @@ const cardImageReady = new Promise((resolve) => {
   image.src = "assets/rice-card.png";
 });
 
-/* STEP 2: Create one card */
+/* Create a numbered card */
 function createCard(n) {
   const card = document.createElement("div");
   card.className = "card";
@@ -678,15 +699,26 @@ function createCard(n) {
   image.src = transparentCardUrl;
   image.alt = "";
 
-  const number = document.createElement("span");
-  number.className = "card-number";
-  number.textContent = formatNumber(n);
+  /*
+    Both "លេខ៖" and the value belong
+    to the SAME flex row.
+  */
+  const numberRow = document.createElement("div");
+  numberRow.className = "card-number";
+
+  const label = document.createElement("span");
+  label.textContent = "លេខ៖";
+
+  const value = document.createElement("span");
+  value.textContent = formatNumber(n);
+
+  numberRow.append(label, value);
 
   const type = document.createElement("span");
   type.className = "card-type";
   type.textContent = "( " + $("type").value + " )";
 
-  card.append(image, number, type);
+  card.append(image, numberRow, type);
   return card;
 }
 
@@ -696,7 +728,7 @@ function createEmptyCard() {
   return empty;
 }
 
-/* STEP 3: Validate numbering */
+/* Calculate cards and A4 sheets */
 function getState() {
   const start = Number($("start").value);
   const end = Number($("end").value);
@@ -717,7 +749,10 @@ function getState() {
   }
 
   const total = end - start + 1;
-  const pages = Math.ceil(total / CARDS_PER_PAGE);
+
+  const pages = Math.ceil(
+    total / CARDS_PER_PAGE
+  );
 
   const batch = $("batch").value;
 
@@ -746,11 +781,12 @@ function getState() {
   };
 }
 
-/* STEP 4: Preview */
+/* Update preview */
 function updatePreview() {
   const s = getState();
 
-  $("error").textContent = imageError || s.error || "";
+  $("error").textContent =
+    imageError || s.error || "";
 
   if (s.error || imageError || !transparentCardUrl) {
     return;
@@ -776,6 +812,7 @@ function updatePreview() {
   }
 
   const count = s.stop - s.valid + 1;
+
   const sheets = Math.ceil(
     count / CARDS_PER_PAGE
   );
@@ -788,21 +825,25 @@ function updatePreview() {
     " (" + sheets + " សន្លឹក A4)";
 }
 
+/* Input listeners */
 fields.forEach((id) => {
   $(id).addEventListener("input", updatePreview);
   $(id).addEventListener("change", updatePreview);
 });
 
+/* Reset batch when start number changes */
 $("start").addEventListener("change", () => {
   $("batchStart").value = $("start").value;
   updatePreview();
 });
 
+/* Reset */
 $("resetBtn").addEventListener("click", () => {
   $("batchStart").value = $("start").value;
   updatePreview();
 });
 
+/* Next batch */
 $("nextBtn").addEventListener("click", () => {
   const s = getState();
 
@@ -816,9 +857,7 @@ $("nextBtn").addEventListener("click", () => {
   updatePreview();
 });
 
-/* STEP 5: Print / Save PDF */
-let printing = false;
-
+/* Generate print pages */
 $("printBtn").addEventListener("click", async () => {
   await cardImageReady;
 
@@ -862,10 +901,7 @@ $("printBtn").addEventListener("click", async () => {
     const fragment = document.createDocumentFragment();
     let generatedPages = 0;
 
-    /*
-      Generate 30 A4 pages per chunk
-      to keep the interface responsive.
-    */
+    // Generate 30 pages per chunk.
     while (
       n <= s.stop &&
       generatedPages < 30
@@ -893,7 +929,6 @@ $("printBtn").addEventListener("click", async () => {
       return;
     }
 
-    // Wait for image and font rendering.
     const images = Array.from(
       root.querySelectorAll("img")
     );
@@ -915,11 +950,12 @@ $("printBtn").addEventListener("click", async () => {
   generateChunk();
 });
 
+/* Cleanup after printing */
 window.addEventListener("afterprint", () => {
   $("printRoot").replaceChildren();
 });
 
-/* Start only when the transparent image is ready. */
+/* Initialize */
 cardImageReady.then(() => {
   updatePreview();
 });
