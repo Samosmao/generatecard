@@ -152,6 +152,39 @@ input:focus, select:focus {
   font-size: 13px;
 }
 
+.mode-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.mode-tab {
+  padding: 12px 8px;
+  border: 1px solid #3c5747;
+  border-radius: 10px;
+  color: #b9d4c2;
+  background: #13221b;
+  font-weight: 700;
+}
+
+.mode-tab[aria-selected="true"] {
+  color: white;
+  background: #147e53;
+  border-color: #65c38e;
+}
+
+.manual-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.manual-grid .field { margin: 0; }
+.manual-grid input { font-variant-numeric: tabular-nums; }
+[hidden] { display: none !important; }
+
 .btn {
   width: 100%;
   margin-top: 10px;
@@ -302,7 +335,7 @@ input:focus, select:focus {
 
   color: #000;
   font-family: Battambang, serif;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 400;
   line-height: 1;
   white-space: nowrap;
@@ -459,6 +492,13 @@ input:focus, select:focus {
     <section class="panel">
       <h2>ការកំណត់កាត</h2>
 
+      <div class="mode-tabs" role="tablist" aria-label="Numbering mode">
+        <button class="mode-tab" id="automaticTab" type="button" role="tab" aria-controls="automaticPanel" aria-selected="true">Automatic</button>
+        <button class="mode-tab" id="adjustmentTab" type="button" role="tab" aria-controls="adjustmentPanel" aria-selected="false">Adjustment</button>
+      </div>
+
+      <div id="automaticPanel" role="tabpanel" aria-labelledby="automaticTab">
+
       <div class="field-row">
         <div class="field">
           <label for="start">លេខចាប់ផ្ដើម</label>
@@ -479,11 +519,26 @@ input:focus, select:focus {
           <option value="6">6 Digits — 000001</option>
         </select>
       </div>
+      </div>
+
+      <div id="adjustmentPanel" role="tabpanel" aria-labelledby="adjustmentTab" hidden>
+        <p class="notice">បញ្ចូលលេខផ្ទាល់ខ្លួនសម្រាប់កាតទាំង 8។ លេខ 0 នៅខាងមុខនឹងត្រូវបានរក្សា ដូចជា 0003 និង 08000។</p>
+        <div class="manual-grid" id="manualGrid">
+          <div class="field"><label for="manual1">Card 1</label><input id="manual1" class="manual-number" type="text" inputmode="numeric" maxlength="12" value="00001"></div>
+          <div class="field"><label for="manual2">Card 2</label><input id="manual2" class="manual-number" type="text" inputmode="numeric" maxlength="12" value="00002"></div>
+          <div class="field"><label for="manual3">Card 3</label><input id="manual3" class="manual-number" type="text" inputmode="numeric" maxlength="12" value="00003"></div>
+          <div class="field"><label for="manual4">Card 4</label><input id="manual4" class="manual-number" type="text" inputmode="numeric" maxlength="12" value="00004"></div>
+          <div class="field"><label for="manual5">Card 5</label><input id="manual5" class="manual-number" type="text" inputmode="numeric" maxlength="12" value="00005"></div>
+          <div class="field"><label for="manual6">Card 6</label><input id="manual6" class="manual-number" type="text" inputmode="numeric" maxlength="12" value="00006"></div>
+          <div class="field"><label for="manual7">Card 7</label><input id="manual7" class="manual-number" type="text" inputmode="numeric" maxlength="12" value="00007"></div>
+          <div class="field"><label for="manual8">Card 8</label><input id="manual8" class="manual-number" type="text" inputmode="numeric" maxlength="12" value="00008"></div>
+        </div>
+      </div>
 
       <div class="field">
         <label for="type">អត្ថបទខាងក្រោមកាត</label>
         <select id="type">
-          <option value="ពូជស្រូវ">ពូជស្រូវ</option>
+          <option value="ស្រូវ">ស្រូវ</option>
           <option value="ស្បៀង">ស្បៀង</option>
         </select>
       </div>
@@ -504,6 +559,7 @@ input:focus, select:focus {
         </div>
       </div>
 
+      <div id="batchSettings">
       <h2>បោះពុម្ពជាដុំៗ</h2>
 
       <div class="field">
@@ -520,6 +576,7 @@ input:focus, select:focus {
       <div class="field">
         <label for="batchStart">ចាប់ផ្ដើមបោះពុម្ពពីលេខ</label>
         <input id="batchStart" type="number" value="1" min="0">
+      </div>
       </div>
 
       <div id="error" class="error" role="alert"></div>
@@ -579,6 +636,7 @@ const fields = [
 ];
 
 const CARDS_PER_PAGE = 8;
+let numberingMode = "automatic";
 
 let transparentCardUrl = "";
 let imageError = "";
@@ -713,7 +771,8 @@ function createCard(n) {
   label.textContent = "លេខ៖";
 
   const value = document.createElement("span");
-  value.textContent = formatNumber(n);
+  // Strings from Adjustment are exact: preserve leading zeros.
+  value.textContent = typeof n === "string" ? n : formatNumber(n);
 
   numberRow.append(label, value);
 
@@ -737,6 +796,32 @@ function createEmptyCard() {
   empty.className = "empty-card";
   return empty;
 }
+
+function getManualNumbers() {
+  const numbers = Array.from(document.querySelectorAll(".manual-number"), input => input.value.trim());
+  const invalid = numbers.findIndex(n => !/^\d{1,12}$/.test(n));
+  return invalid === -1
+    ? { numbers }
+    : { error: `Card ${invalid + 1}: សូមបញ្ចូលតែលេខ 0–9 (1–12 ខ្ទង់)។` };
+}
+
+function setNumberingMode(mode) {
+  numberingMode = mode;
+  const manual = mode === "adjustment";
+  $("automaticPanel").hidden = manual;
+  $("adjustmentPanel").hidden = !manual;
+  $("batchSettings").hidden = manual;
+  $("nextBtn").hidden = manual;
+  $("automaticTab").setAttribute("aria-selected", String(!manual));
+  $("adjustmentTab").setAttribute("aria-selected", String(manual));
+  updatePreview();
+}
+
+$("automaticTab").addEventListener("click", () => setNumberingMode("automatic"));
+$("adjustmentTab").addEventListener("click", () => setNumberingMode("adjustment"));
+document.querySelectorAll(".manual-number").forEach(input => {
+  input.addEventListener("input", updatePreview);
+});
 
 /* Calculate cards and A4 sheets */
 function getState() {
@@ -793,6 +878,23 @@ function getState() {
 
 /* Update preview */
 function updatePreview() {
+  if (numberingMode === "adjustment") {
+    const manual = getManualNumbers();
+    $("error").textContent = imageError || manual.error || "";
+    $("total").textContent = "8";
+    $("pages").textContent = "1";
+    $("batchInfo").textContent = "Adjustment: 8 កាតផ្ទាល់ខ្លួន / A4 1 សន្លឹក។";
+    if (imageError || !transparentCardUrl) return;
+
+    const preview = $("previewSheet");
+    preview.replaceChildren();
+    const numbers = Array.from(document.querySelectorAll(".manual-number"), input => input.value.trim());
+    numbers.forEach(number => preview.append(
+      /^\d{1,12}$/.test(number) ? createCard(number) : createEmptyCard()
+    ));
+    return;
+  }
+
   const s = getState();
 
   $("error").textContent =
@@ -849,6 +951,13 @@ $("start").addEventListener("change", () => {
 
 /* Reset */
 $("resetBtn").addEventListener("click", () => {
+  if (numberingMode === "adjustment") {
+    document.querySelectorAll(".manual-number").forEach((input, i) => {
+      input.value = String(i + 1).padStart(5, "0");
+    });
+    updatePreview();
+    return;
+  }
   $("batchStart").value = $("start").value;
   updatePreview();
 });
@@ -877,19 +986,27 @@ $("printBtn").addEventListener("click", async () => {
     return;
   }
 
-  const s = getState();
+  const isManual = numberingMode === "adjustment";
+  const manual = isManual ? getManualNumbers() : null;
+  if (manual?.error) {
+    $("error").textContent = manual.error;
+    return;
+  }
+  const s = isManual
+    ? { start: 0, end: 7, valid: 0, stop: 7 }
+    : getState();
 
   if (s.error) {
     updatePreview();
     return;
   }
 
-  if (
+  if (!isManual && (
     $("batchStart").value.trim() === "" ||
     !Number.isSafeInteger(s.batchStart) ||
     s.batchStart < s.start ||
     s.batchStart > s.end
-  ) {
+  )) {
     $("error").textContent =
       "លេខចាប់ផ្ដើមបោះពុម្ពមិនត្រឹមត្រូវ។";
     return;
@@ -921,7 +1038,7 @@ $("printBtn").addEventListener("click", async () => {
 
       for (let i = 0; i < CARDS_PER_PAGE; i++) {
         if (n <= s.stop) {
-          sheet.append(createCard(n));
+          sheet.append(createCard(isManual ? manual.numbers[n] : n));
           n++;
         } else {
           sheet.append(createEmptyCard());
